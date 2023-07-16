@@ -1,38 +1,44 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mongodb"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 type Comments {
-  name String
+  name    String
   comment String
 }
 
 model User {
-  id String @id @map("_id") @default(auto()) @db.ObjectId
-  name String
-  createdAt DateTime @default(now())
-  email String @unique
-  phoneNumber Int @unique
-  role Role @default(USER)
-  posts Post[] // 1-n Relationship
-  comments Comments
+  id      String   @id @default(cuid()) @map("_id") @db.ObjectId
+  posts   Post[]
+  profile Profile?
+}
+
+model Profile {
+  id     String @id @default(cuid()) @map("_id") @db.ObjectId
+  name   String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 }
 
 model Post {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  headline String
-  content String
-  image Json
-  author User? @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
-  comments Comments[]
+  id         String     @id @default(cuid()) @map("_id") @db.ObjectId
+  name       String
+  created    DateTime   @default(now())
+  author     User       @relation(fields: [authorId], references: [id])
+  authorId   String     @db.ObjectId
+  categories Category[] @relation(fields: [catId], references: [id])
+  catId      String[]   @db.ObjectId
+}
+
+model Category {
+  id     String   @id @default(cuid()) @map("_id") @db.ObjectId
+  post   Post[]   @relation(fields: [postId], references: [id])
+  postId String[] @db.ObjectId
 }
 
 enum Role {
