@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
-  id       String  @id @default(cuid()) @map("_id") @db.ObjectId
+  id       Int     @id @default(autoincrement())
   name     String?
   email    String  @unique
   password String
@@ -16,10 +17,19 @@ model User {
 }
 
 model Post {
-  id       String @id @default(cuid()) @map("_id") @db.ObjectId
-  title    String
-  body     String
-  slug     String @unique
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
+  id         Int        @id @default(autoincrement())
+  title      String
+  body       String
+  slug       String     @unique
+  author     User       @relation(fields: [authorId], references: [id])
+  authorId   Int
+  categories Category[]
+
+  @@index([authorId])
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  genere String 
+  posts Post[]
 }
