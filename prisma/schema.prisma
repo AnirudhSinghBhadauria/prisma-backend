@@ -18,13 +18,13 @@ model User {
 }
 
 model Profile {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
-  name   String
-  place  String
-  link   String @unique
-  email  String @unique
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+
+  name String
+  adress String
+  phone Int   
 }
 
 model Post {
