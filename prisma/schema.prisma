@@ -12,8 +12,12 @@ model User {
   id      String   @id @default(uuid())
   name    String?
   email   String   @unique
+  age     Int      @default(1)
+  role    Role     @default(BASIC)
   posts   Post[]
   profile Profile?
+
+  @@unique([email, age])
 }
 
 model Profile {
@@ -29,12 +33,16 @@ model Profile {
 model Post {
   id       String     @id @default(uuid())
   name     String
+  likes    Int        @default(0)
+  heading  String
+  slug     String     @default(uuid())
   author   User       @relation(fields: [authorId], references: [id])
   authorId String     @default(uuid())
   category Category[]
 
   updatedAt DateTime @updatedAt
 
+  @@unique([slug, name])
   @@index([authorId])
 }
 
@@ -42,4 +50,10 @@ model Category {
   id     String @id @default(uuid())
   genere String
   post   Post[]
+}
+
+enum Role {
+  ADMIN
+  BASIC
+  PLUS
 }
