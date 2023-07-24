@@ -31,25 +31,34 @@ model Profile {
 }
 
 model Post {
-  id       String     @id @default(uuid())
+  id       String    @id @default(uuid())
   name     String
-  likes    Int        @default(0)
-  heading  String
-  slug     String     @default(uuid())
-  author   User       @relation(fields: [authorId], references: [id])
-  authorId String     @default(uuid())
-  category Category[]
+  likes    Int       @default(0)
+  heading  String    @unique
+  slug     String    @default(uuid())
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @default(uuid())
+  category Category @relation(fields: [catId], references: [id])
+  catId    String  @default(uuid())
 
   updatedAt DateTime @updatedAt
 
   @@unique([slug, name])
   @@index([authorId])
+  @@index([catId])
 }
 
 model Category {
-  id     String @id @default(uuid())
-  genere String
+  id     String  @id @default(uuid())
+  genere Genere  @default(TECH)
   post   Post[]
+  postId String? @unique
+}
+
+enum Genere {
+  TECH
+  NEWS
+  ENTERTAINTMENT
 }
 
 enum Role {

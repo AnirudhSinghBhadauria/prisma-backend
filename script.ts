@@ -46,15 +46,29 @@ async function main() {
   //   },
   // });
 
-  const user = await prisma.user.findMany({
-    where: {
-      posts: { every: { author: {
-        is: {
-          name: "Kendrick Lamar"
-        }
-      } } },
-    },
-  });
+  // FIND ALL POSTS BY AN AUTHOR
+
+  // const user = await prisma.post.findMany({
+  //   where: {
+  //     author: {
+  //       name: "Kendrick Lamar"
+  //     },
+  //   },
+  // });
+
+  // UPDATE
+
+  // const user = await prisma.post.update({
+  //   where: {
+  //     heading: "heading one",
+  //   },
+  //   data: {
+  //     updatedAt: new Date().toISOString(),
+  //     likes: {
+  //       decrement: 100,
+  //     },
+  //   },
+  // });
 
   // FIND UNIWQUE
 
@@ -66,6 +80,35 @@ async function main() {
   //    }
   //   }
   // })
+
+  // FINDING POST OF CERTAIN CATEGORY
+
+  // const user = await prisma.post.findMany({
+  //   where: {
+  //     category: {
+  //       genere: "NEWS"
+  //     },
+  //   },
+  //   select: {
+  //     name: true,
+  //     heading: true,
+  //     author: { select: { name: true } },
+  //     updatedAt: true,
+  //     likes: true,
+  //     slug: true,
+  //   },
+  // });
+
+  // FILTERING LIKES
+
+  const user = await prisma.post.findMany({
+    where: {
+      likes: { gt: 4 },
+    },
+    orderBy: {
+      likes: "desc",
+    },
+  });
 
   console.log(user);
 }
